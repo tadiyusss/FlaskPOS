@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang='en'>
+    <head>
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <title>{{site_config['SITE_NAME']}} - Sales</title>
+        <script src='https://cdn.tailwindcss.com'></script>
+        <style>
+            :root{
+                --container-height: calc(100vh - 2rem);
+                --max-items-height: calc(100vh - 12rem);
+            }
+
+        </style>
+    </head>
+    <body class="p-3 grid md:grid-cols-10 grid-cols-3 gap-3 bg-blue-50 dark:bg-slate-900">
+        <div class="md:col-span-7 col-span-10">
+            <div class="flex justify-between">
+                <a href="{{url_for('pos.analytics')}}" class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="dark:text-gray-50 size-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+                    </svg>
+                    <h5 class="mx-3 dark:text-gray-50">Return</h5>
+                </a>
+                {% if category_list|length > 0 %}
+                    <select id="category_list" class="p-1 dark:bg-slate-800 border dark:border-slate-900 rounded-md dark:text-white focus:outline-none text-lg">
+                        <option value="all">All Products</option>
+                        {% for category in category_list %}
+                            <option value="{{category[0]}}">{{category[1]}}</option>
+                        {% endfor %}
+                    </select>
+                {% endif %}
+            </div>
+            <div class="grid md:grid-cols-6 grid-cols-3 gap-3 max-h-[var(--container-height)] overflow-auto" id="products_card_container">
+                {% if product_list|length > 0 %}
+                        {% for product_data in product_list %}
+                            <div class="col-span-1 p-1 dark:text-slate-100 border bg-gray-50 dark:bg-slate-800 dark:hover:bg-slate-600 dark:border-slate-500 dark:border-0 rounded cursor-pointer hover:bg-gray-100 ease duration-200" id="product_card" data-product-id="{{product_data['id']}}">
+                                <img class="w-20 h-20 mx-auto object-cover" src="{{url_for('pos.static', filename='products/' + product_data['filename'])}}" alt="">
+                                <div class="text-center mt-2">
+                                    <h5 class="text-sm leading-3" id="product_name">{{product_data['product_name']}}</h5>
+                                    <p class="text-xs text-slate-500" id="product_price">₱{{product_data['price']}}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                {% else %}
+                    <p class="text-center my-10 text-gray-500 col-span-6">No products available</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="md:col-span-3 col-span-10 dark:text-slate-100 bg-gray-50 dark:bg-slate-800 dark:border-0 rounded md:h-[var(--container-height)] border">
+            <div class="overflow-auto md:h-[var(--max-items-height)] p-2" id="cart_container">
+                <p class="text-center my-2 text-gray-500">Your cart is empty</p>
+            </div>
+            <div class="p-2">
+                <input type="number" id="tendered" placeholder="Enter Cash Amount" class="mb-2 w-full p-1 dark:bg-slate-700 border dark:border-slate-600 rounded-md focus:outline-none">
+                <div class="flex justify-between">
+                    <h5>Total</h5>
+                    <h5>₱<span id="cart_total">0.00</span></h5>
+                </div>
+                <div class="flex justify-between">
+                    <h5>Change</h5>
+                    <h5><span id="change">₱0.00</span></h5>
+                </div>
+    
+                <button id="checkout_btn" class="w-full bg-blue-600 hover:bg-blue-700 ease duration-200 text-white p-2 rounded mt-2 disabled:bg-blue-500 disabled:hover:bg-blue-500 disabled:text-blue-200" disabled>Confirm</button>
+            </div>  
+        </div>
+        <div id="notifications-container" class="fixed top-4 right-4 space-y-4">
+
+        </div>
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script src="{{url_for('pos.static', filename='js/pos.js')}}"></script>
+    </body>
+</html>

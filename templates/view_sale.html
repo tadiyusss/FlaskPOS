@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang='en'>
+    <head>
+        <meta charset='utf-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <title>{{site_config['SITE_NAME']}} - Sales</title>
+        <script src='https://cdn.tailwindcss.com'></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+        <style>
+            .source-code-pro{
+                font-family: 'Source Code Pro', monospace;
+            }
+        </style>
+    </head>
+    <body class="bg-blue-50 dark:bg-slate-900">
+        <div class="flex p-5">
+            <button id="print_button" class="bg-blue-600 hover:bg-blue-700 ease duration-200 text-white px-3 py-1 rounded disabled:bg-blue-500 disabled:hover:bg-blue-500 disabled:text-blue-200">Print</button>
+            <a href="{{ request.referrer }}" class="bg-blue-600 hover:bg-blue-700 ease duration-200 text-white px-3 py-1 mx-3 rounded disabled:bg-blue-500 disabled:hover:bg-blue-500 disabled:text-blue-200">Return</a>
+        </div>
+        <div class="bg-gray-50 max-w-[420px] border p-3 mx-auto source-code-pro text-sm rounded dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100" id="printable_receipt">
+            <div class="text-center">
+                <p>Sales Receipt</p>
+                <p>{{sale_data['date_created']}}</p>
+                <p>{{site_config['SITE_NAME']}}</p>
+            </div>
+            <div class="my-4">
+                <div class="flex justify-between">
+                    <p>Operator Name</p>
+                    <p>{{sale_data['data'][0]['operator_name']}}</p>
+                </div>
+                <div class="flex justify-between">
+                    <p>Transaction Type</p>
+                    <p>Cash</p>
+                </div>
+                <div class="flex justify-between">
+                    <p>Transaction ID</p>
+                    <p>{{sale_id}}</p>
+                </div>
+            </div>
+            <p class="text-center">Items</p>
+            <div class="my-4">
+                {% for row in sale_data['data'] %}
+                <div class="flex justify-between">
+                    <p>{{row['product_name']}} x {{row['quantity']}}</p>
+                    <p></p>
+                    <p>{{"%.2f"|format(row['total'])}}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="my-4">
+                <div class="flex justify-between">
+                    <p>Total</p>
+                    <p>{{"%.2f"|format(sale_data['total'])}}</p>
+                </div>
+                <div class="flex justify-between">
+                    <p>Amount Paid</p>
+                    <p>{{"%.2f"|format(sale_data['data'][0]['tendered'])}}</p>
+                </div>
+                <div class="flex justify-between">
+                    <p>Change</p>
+                    <p>{{"%.2f"|format(sale_data['data'][0]['tendered'] - sale_data['total'])}}</p>
+                </div>
+            </div>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function() {
+            $('#print_button').click(function() {
+                var printContents = $('#printable_receipt').html();
+                var originalContents = $('body').html();
+                
+                $('body').html(printContents);
+                window.print();
+                $('body').html(originalContents);
+            });
+        });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,22 @@
+{
+    "enabled": true,
+    "name": "Point of Sales",
+    "version": "0.1",
+    "description": "A plugin for flask-cms to manage point of sales",
+    "url_prefix": "",
+    "blueprint": "pos",
+    "template_folder": "templates",
+    "static_folder": "static",
+    "static_url_path": "/static/pos",
+    "debug": true,
+    "navigation_tab": [
+        {
+            "name":"Point of Sales",
+            "url_for":"pos.point_of_sales"
+        },
+        {
+            "name":"Analytics",
+            "url_for":"pos.analytics"
+        }
+    ]
+}

@@ -1,0 +1,28 @@
+CREATE TABLE IF NOT EXISTS products (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_name VARCHAR(128) NOT NULL,
+    filename VARCHAR(255) NOT NULL,
+    stocks INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    visibility BOOLEAN DEFAULT 1,
+    price DECIMAL NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_deleted BOOLEAN DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS product_category (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    category_name VARCHAR(128) NOT NULL,
+    is_deleted BOOLEAN DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS sales (
+    sale_id VARCHAR(64),
+    product_id INTEGER NOT NULL,
+    tendered DECIMAL NOT NULL,
+    quantity INTEGER NOT NULL,
+    price DECIMAL NOT NULL,
+    total DECIMAL NOT NULL,
+    operator_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
